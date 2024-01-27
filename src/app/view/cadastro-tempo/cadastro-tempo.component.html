@@ -1,0 +1,148 @@
+<!-- Modal -->
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg mx-auto" role="document">
+        <ng-container *ngFor="let itemcondutores of listaDeCondutores">
+            <ng-container *ngFor="let itemveiculos of itemcondutores.veiculos">
+                <form *ngFor="let itemtempo of listaDeTempos">
+                    <ng-container *ngIf="itemcondutores.id === itemtempo.condutor && itemveiculos.id === itemtempo.veiculo">
+                        <div class="modal-content">
+                            <div class="modal-header alert alert-warning">
+                                <h5 class="modal-title" id="exampleModalLabel">Aviso de Tempo Expirado</h5>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-warning" role="alert"><i class="bi bi-exclamation-triangle-fill mr-2"></i>
+                                    <p class="mb-0" *ngIf="itemtempo.tempoRegistrado === 'Automático';  else outroConteudo">
+                                        O Condutor: {{ itemcondutores.nomeCompleto }} do carro {{ itemveiculos.placa }}
+                                        teve seu tempo {{ itemtempo.dateTimeRegistrado }} Atualizado! </p>
+
+                                    <ng-template #outroConteudo>
+                                        O Condutor: {{ itemcondutores.nomeCompleto }} do carro {{ itemveiculos.placa }}
+                                        teve seu tempo {{ itemtempo.dateTimeRegistrado }} expirado deseja <button disabled type="button" class="btn btn-success">Iniciar</button> hora adicional
+                                        ou <button disabled type="button" class="btn btn-danger">Parar</button> o serviço
+                                    </ng-template>
+                                    <p  class="h6" >Informe ele através do Telefone: {{ itemcondutores.celular }},  E-mail: {{itemcondutores.email}} </p>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <ng-container *ngIf="itemcondutores.id === itemtempo.condutor && itemveiculos.id === itemtempo.veiculo">
+                                    <ng-container *ngIf="itemtempo.tempoRegistrado === 'Automático' && itemtempo.atualizacoes !== 5;">
+                                        <button type="button" class="btn btn-secondary" (click)="salvar(condutorSelecionado, veiculoSelecionado, controleSelecionado)">Fechar</button>
+                                    </ng-container>
+                                    <ng-container *ngIf="itemtempo.tempoRegistrado === '01:00 Hora' || itemtempo.tempoRegistrado === '02:00 Horas' || itemtempo.tempoRegistrado === '03:00 Horas' || itemtempo.tempoRegistrado === '04:00 Horas' || itemtempo.tempoRegistrado === 'Automático' && itemtempo.atualizacoes === 5;">
+                                        <button type="button" class="btn btn-success" (click)="salvar(condutorSelecionado, veiculoSelecionado, controleSelecionado)"><i class="bi bi-floppy2 icon-margin-right"></i>Iniciar</button>
+                                        <button type="button" class="btn btn-danger" (click)="acabaTempo(itemtempo)"><i class="bi bi-trash icon-margin-right"></i>Parar</button>
+                                    </ng-container>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </ng-container>
+                </form>
+                <div class="mt-2 ml-2 mr-2 mb-2" role="document"></div>
+            </ng-container>
+        </ng-container>
+    </div>
+</div>
+<div class="container-fluid">
+    <!-- Navegador -->
+    <nav class="navbar navbar-light bg-light">
+        <span class="navbar-brand mb-0 h1"><i class="bi bi-car-front-fill icon-margin-right"></i>Parquímetro | Cadastro de Hora</span>
+    </nav>
+    <div class="mt-3 mb-3 col-12 text-right">
+        <button type="button" class="btn btn-secondary text-right" routerLink="/home"><i class="bi bi-arrow-counterclockwise icon-margin-right"></i>Voltar</button>
+    </div>
+    <div class="container-fluid">
+        <!-- Sucess -->
+        <div class="alert alert-info " role="alert" *ngIf="exibeMensagem"> {{ textoMensagem }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <!-- Danger -->
+        <div class="alert alert-danger" role="alert" *ngIf="exibeMensagem2"> {{ textoMensagem }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+    <form class="container-fluid">
+        <!-- Selecione o Condutor -->
+        <div class="form-group">
+            <label for="condutor">Selecione o Condutor:</label>
+            <select class="custom-select invalid-feedback" id="condutor" name="condutor" required [(ngModel)]="condutorSelecionado" (change)="verificaCondutor()" [class.is-invalid]="!condutorSelecionado">
+                <option *ngFor="let condutor of listaDeCondutores" [ngValue]="condutor">{{ condutor.nomeCompleto }}</option>
+            </select>
+            <div class="invalid-feedback">Este campo é obrigatório.</div>
+        </div>
+        <!-- Selecione o Veículo -->
+        <div class="form-group">
+            <label for="veiculo">Selecione o Veículo:</label>
+            <select class="custom-select invalid-feedback" id="veiculo" name="veiculo" required [(ngModel)]="veiculoSelecionado" (change)="verificaVeiculo()" [class.is-invalid]="!veiculoSelecionado">
+                <option *ngFor="let veiculo of listaDeVeiculos" [ngValue]="veiculo">{{ veiculo.placa }}</option>
+            </select>
+            <div class="invalid-feedback">Este campo é obrigatório.</div>
+        </div>
+        <ng-container *ngIf="this.tempoSelecionado && this.tempoSelecionado.tempoRegistrado">
+            <!-- Tempo Selecionado -->
+            <div class="form-group">
+                <label for="tempo">Tempo Selecionado</label>
+                <input disabled type="text" class="form-control" id="tempo" name="tempo" [(ngModel)]="tempoSelecionado.tempoRegistrado" (chage)="selecionar(condutorSelecionado.id, veiculoSelecionado.id)">
+            </div>
+        </ng-container>
+        <!-- Selecione o Tempo -->
+        <ng-container *ngIf="this.tempoSelecionado == undefined || this.tempoSelecionado.tempoRegistrado == undefined">
+            <div class="form-group">
+                <label for="controle">Selecione o Tempo:</label>
+                <select class="custom-select invalid-feedback" id="controle" name="controle" required [(ngModel)]="controleSelecionado" [class.is-invalid]="!controleSelecionado">
+                    <option *ngFor="let controle of controleDeTempos" [ngValue]="controle">{{ controle.name }}</option>
+                </select>
+                <div class="invalid-feedback">Este campo é obrigatório.</div>
+            </div>
+        </ng-container>
+    </form>
+    <div class="mt-2 mb-2 col-12 text-right button-group">
+        <ng-container *ngIf="this.tempoSelecionado == undefined || this.tempoSelecionado.tempoRegistrado == undefined">
+            <button type="button" class="btn btn-success text-right" (click)="salvar(condutorSelecionado, veiculoSelecionado, controleSelecionado)"> <i class=" mr-2 bi bi-floppy2 icon-margin-right"></i> Salvar </button>
+        </ng-container>
+        <ng-container *ngIf="this.tempoSelecionado && this.tempoSelecionado.tempoRegistrado">
+            <button type="button" class="btn btn-danger text-right" > <i class="mr-3 bi bi-trash icon-margin-right" ></i>Parar</button>
+        </ng-container>
+    </div>
+</div>
+<div class="container-fluid" >
+    <form class="container-fluid">
+        <!-- Carrega dados de Condutor/Veiculo e Verifica se tem tempo salvo -->
+        <table class="table table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Nome Completo</th>
+                <th scope="col">Email</th>
+                <th scope="col">CPF</th>
+                <th scope="col">Celular</th>
+                <th scope="col">Placa Carro</th>
+                <th scope="col">Tempo Estacionamento</th>
+            </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let itemcondutores of listaDeCondutores">
+                    <ng-container *ngFor="let itemveiculos of itemcondutores.veiculos">
+                        <tr (click)="selecionar(itemcondutores.id, itemveiculos.id)">
+                            <td>{{ itemcondutores.nomeCompleto }}</td>
+                            <td>{{ itemcondutores.email }}</td>
+                            <td>{{ itemcondutores.cpf }}</td>
+                            <td>{{ itemcondutores.celular }}</td>
+                            <td>{{ itemveiculos.placa }}</td>
+                            <td>
+                                <ng-container *ngFor="let itemtempo of listaDeTempos">
+                                    <ng-container *ngIf="itemcondutores.id === itemtempo.condutor && itemveiculos.id === itemtempo.veiculo" >
+                                        <span>{{ itemtempo.tempoRegistrado }}</span>
+                                    </ng-container>
+                                </ng-container>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </ng-container>
+            </tbody>
+        </table>
+    </form>
+</div>
+<div id="efeito_modal" class=""></div>

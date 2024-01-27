@@ -1,0 +1,93 @@
+<nav class="navbar navbar-light bg-light">
+    <span class="navbar-brand mb-0 h1"><i class="bi bi-car-front-fill icon-margin-right"></i>Parquímetro | Cadastro de Veículos</span>
+</nav>
+
+<div class="container">
+    <div class="alert alert-info" role="alert" *ngIf="exibeMensagem">
+        {{ textoMensagem }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-right">
+            <button type="button" class="btn btn-secondary text-right" routerLink="/home"><i class="bi bi-arrow-counterclockwise icon-margin-right"></i>Voltar</button>
+        </div>
+
+        <div class="form-group col-2">
+            <label for="id">ID</label>
+            <input type="text" [disabled]="true" class="form-control" id="id" [(ngModel)]="veiculo.id">
+        </div>
+        <div class="form-group col-2">
+            <label for="placa">Placa</label>
+            <input type="text" class="form-control" id="placa" [maxlength]="7" [(ngModel)]="veiculo.placa">
+        </div>
+        <div class="form-group col-4">
+            <label for="marca">Marca</label>
+            <input type="text" class="form-control" id="marca" [(ngModel)]="veiculo.marca">
+        </div>
+        <div class="form-group col-4">
+            <label for="modelo">Modelo</label>
+            <input type="text" class="form-control" id="modelo" [(ngModel)]="veiculo.modelo">
+        </div>
+        <div class="form-group col-4">
+            <label for="anoFabricacao">Ano Fabricação</label>
+            <input type="text" class="form-control" id="anoFabricacao" [maxlength]="4" [(ngModel)]="veiculo.anoFabricacao">
+        </div>
+        <div class="form-group col-4">
+            <label for="anoModelo">Ano Modelo</label>
+            <input type="text" class="form-control" id="anoModelo" [maxlength]="4"  [(ngModel)]="veiculo.anoModelo">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="cor">Cor</label>
+            <select id="cor" class="form-control" [(ngModel)]="veiculo.cor">
+                <option selected>Escolha a Cor</option>
+                <option *ngFor="let cor of cores">{{ cor }}</option>
+            </select>
+        </div>
+
+        <div class="col-12 text-right button-group">
+            <button type="button" class="btn btn-primary" (click)="novo()"><i class="bi bi-plus-circle-fill icon-margin-right"></i>Novo</button>
+            <button type="button" class="btn btn-primary" (click)="salvar()"><i class="bi bi-floppy2 icon-margin-right"></i>Salvar</button>
+            <button type="button" class="btn btn-danger" (click)="excluir()"><i class="bi bi-trash icon-margin-right"></i>Excluir</button>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="form-group col-3">
+            <label>Pesquise pela Placa</label>
+            <div class="input-group-append">
+                <input type="text" #placaPesquisa name="placaPesquisa" (keyup)="pesquisar(placaPesquisa.value)" class="form-control">
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Placa</th>
+                <th scope="col">Marca</th>
+                <th scope="col">Modelo</th>
+                <th scope="col">Ano Fabricação</th>
+                <th scope="col">Ano Modelo</th>
+                <th scope="col">Cor</th>
+                <th scope="col">Data de Cadastro</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr (click)="selecionarVeiculo(veiculo.id)" *ngFor="let veiculo of listaDeVeiculos" [className]="veiculoSelecionado.id == veiculo.id ? 'selecionado' : ''">
+                <td>{{ veiculo.id }}</td>
+                <td>{{ veiculo.placa }}</td>
+                <td>{{ veiculo.marca }}</td>
+                <td>{{ veiculo.modelo }}</td>
+                <td>{{ veiculo.anoFabricacao }}</td>
+                <td>{{ veiculo.anoModelo }}</td>
+                <td>{{ veiculo.cor }}</td>
+                <td>{{ veiculo.dataCadastro }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

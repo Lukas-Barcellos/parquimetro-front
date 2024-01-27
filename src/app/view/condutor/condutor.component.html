@@ -1,0 +1,84 @@
+<nav class="navbar navbar-light bg-light">
+    <span class="navbar-brand mb-0 h1"><i class="bi bi-car-front-fill icon-margin-right"></i>Parquímetro | Cadastro de Condutores</span>
+</nav>
+
+<div class="container">
+    <div class="alert alert-info" role="alert" *ngIf="exibeMensagem">
+        {{ textoMensagem }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-right">
+            <button type="button" class="btn btn-secondary text-right" routerLink="/home"><i class="bi bi-arrow-counterclockwise icon-margin-right"></i>Voltar</button>
+        </div>
+
+        <div class="form-group col-2">
+            <label for="id">ID</label>
+            <input type="text" [disabled]="true" class="form-control" id="id" [(ngModel)]="condutor.id">
+        </div>
+        <div class="form-group col-10">
+            <label for="nomeCompleto">Nome Completo</label>
+            <input type="text" class="form-control" id="nomeCompleto" [(ngModel)]="condutor.nomeCompleto">
+        </div>
+        <div class="form-group col-4">
+            <label for="email">Email</label>
+            <input type="text" class="form-control" id="email" [(ngModel)]="condutor.email">
+        </div>
+        <div class="form-group col-4">
+            <label for="cpf">CPF</label>
+            <input type="text" class="form-control" id="cpf" [(ngModel)]="condutor.cpf">
+        </div>
+        <div class="form-group col-4">
+            <label for="celular">Celular</label>
+            <input type="text" class="form-control" id="celular" [(ngModel)]="condutor.celular">
+        </div>
+
+        <div class="form-group col-12">
+            <label>Veículos</label>
+            <ng-select [(ngModel)]="condutor.veiculos" [multiple]="true" [searchable]="true" placeholder="Selecione seus veículos">
+                <ng-option *ngFor="let veiculo of veiculos" [value]="veiculo">{{ veiculo.placa }} | {{ veiculo.modelo }}</ng-option>
+             </ng-select>
+        </div>
+        <div class="col-12 text-right button-group">
+            <button type="button" class="btn btn-primary" (click)="novo()"><i class="bi bi-plus-circle-fill icon-margin-right"></i>Novo</button>
+            <button type="button" class="btn btn-primary" (click)="salvar()"><i class="bi bi-floppy2 icon-margin-right"></i>Salvar</button>
+            <button type="button" class="btn btn-danger" (click)="excluir()"><i class="bi bi-trash icon-margin-right"></i>Excluir</button>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="form-group col-3">
+            <label>Pesquise pelo Nome</label>
+            <div class="input-group-append">
+                <input type="text" #nomePesquisa name="nomePesquisa" (keyup)="pesquisar(nomePesquisa.value)" class="form-control">
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nome Completo</th>
+                <th scope="col">Email</th>
+                <th scope="col">CPF</th>
+                <th scope="col">Celular</th>
+                <th scope="col">Data de Cadastro</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr (click)="selecionarCondutor(condutor.id)" *ngFor="let condutor of listaDeCondutores" [className]="condutorSelecionado.id == condutor.id ? 'selecionado' : ''">
+                <td>{{ condutor.id }}</td>
+                <td>{{ condutor.nomeCompleto }}</td>
+                <td>{{ condutor.email }}</td>
+                <td>{{ condutor.cpf }}</td>
+                <td>{{ condutor.celular }}</td>
+                <td>{{ condutor.dataCadastro }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

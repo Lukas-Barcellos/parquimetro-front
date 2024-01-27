@@ -1,0 +1,26 @@
+<nav class="navbar navbar-light bg-light">
+    <span class="navbar-brand mb-0 h1"><i class="bi bi-car-front-fill icon-margin-right"></i>Parquímetro | Realização de Pagamento</span>
+</nav>
+
+<div class="container">
+    <div class="alert alert-info" role="alert" *ngIf="exibeMensagem">
+        {{ textoMensagem }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    
+    <div class="row">
+        <div class="form-group col-md-4">
+            <label for="formaDePagamento">Formma  De Pagamento</label>
+            <select id="formaDePagamento" class="form-control" [(ngModel)]="veiculo.cor">
+                <option selected>Escolha a forma de pagamento que deseeja utilizar</option>
+                <option *ngFor="let formaDePagamento of formaDePagamento">{{ formaDePagamento }}</option>
+            </select>
+        </div>
+
+        <div class="form-group col-4">
+            <button type="button" class="btn btn-primary" (click)="pagar()"><i class="bi bi-plus-circle-fill icon-margin-right"></i>Pagar</button>
+        </div>
+    </div>
+</div>

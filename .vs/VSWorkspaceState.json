@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\.idea",
+    "\\src",
+    "\\src\\app",
+    "\\src\\app\\view",
+    "\\src\\app\\view\\cadastro-tempo",
+    "\\src\\app\\view\\condutor"
+  ],
+  "SelectedNode": "\\src\\app\\view\\cadastro-tempo\\cadastro-tempo.component.ts",
+  "PreviewInSolutionExplorer": false
+}
